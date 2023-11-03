@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: 'realstate'
+      MYSQL_ROOT_PASSWORD: 'admin'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+      PMA_HOST: 'mysql'
+    ports:
+      - 8080:80

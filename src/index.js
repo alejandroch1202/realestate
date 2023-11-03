@@ -1,8 +1,17 @@
 import express from 'express'
 import router from './routes/index.js'
+import db from './config/db.js'
 
 const PORT = process.env.PORT ?? 3000
 const app = express()
+
+// DB connection
+try {
+  await db.authenticate()
+  console.log('[mysql] Connection established')
+} catch (error) {
+  console.log(error)
+}
 
 // Enable Pug
 app.set('view engine', 'pug')
