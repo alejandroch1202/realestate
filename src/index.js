@@ -5,9 +5,13 @@ import db from './config/db.js'
 const PORT = process.env.PORT ?? 3000
 const app = express()
 
+// Enable JSON from POST
+app.use(express.urlencoded({ extended: true }))
+
 // DB connection
 try {
   await db.authenticate()
+  db.sync()
   console.log('[mysql] Connection established')
 } catch (error) {
   console.log(error)
