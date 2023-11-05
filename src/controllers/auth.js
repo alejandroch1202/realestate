@@ -8,7 +8,8 @@ const loginForm = (req, res) => {
 
 const signupForm = (req, res) => {
   res.render('auth/signup', {
-    page: 'Crear cuenta'
+    page: 'Crear cuenta',
+    csrfToken: req.csrfToken()
   })
 }
 

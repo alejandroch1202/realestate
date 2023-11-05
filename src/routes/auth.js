@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { csrfToken, csrfValidator } from './../middlewares/csrf.js'
 import {
   loginForm,
   signupForm,
@@ -10,8 +11,8 @@ import { createUser } from './../controllers/users.js'
 const router = Router()
 
 router.get('/login', loginForm)
-router.get('/signup', signupForm)
-router.post('/signup', createUser)
+router.get('/signup', csrfToken, signupForm)
+router.post('/signup', csrfToken, csrfValidator, createUser)
 router.get('/confirm/:token', confirmAccount)
 router.get('/recovery', recoveryForm)
 

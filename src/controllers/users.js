@@ -25,6 +25,7 @@ const createUser = async (req, res) => {
   if (!result.isEmpty()) {
     return res.render('auth/signup', {
       page: 'Crear cuenta',
+      csrfToken: req.csrfToken(),
       errors: result.array(),
       user: {
         name: req.body.name,
@@ -39,6 +40,7 @@ const createUser = async (req, res) => {
   if (isDuplicated) {
     return res.render('auth/signup', {
       page: 'Crear cuenta',
+      csrfToken: req.csrfToken(),
       errors: [{ msg: 'El correo ya existe' }],
       user: {
         name: req.body.name,
