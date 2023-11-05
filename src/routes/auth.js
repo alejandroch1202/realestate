@@ -1,19 +1,25 @@
 import { Router } from 'express'
-import { csrfToken, csrfValidator } from './../middlewares/csrf.js'
+import { csrfValidator } from './../middlewares/csrf.js'
 import {
   loginForm,
   signupForm,
   confirmAccount,
-  recoveryForm
+  recoveryForm,
+  recovery,
+  checkToken,
+  newPassword
 } from './../controllers/auth.js'
 import { createUser } from './../controllers/users.js'
 
 const router = Router()
 
 router.get('/login', loginForm)
-router.get('/signup', csrfToken, signupForm)
-router.post('/signup', csrfToken, csrfValidator, createUser)
+router.get('/signup', signupForm)
+router.post('/signup', csrfValidator, createUser)
 router.get('/confirm/:token', confirmAccount)
 router.get('/recovery', recoveryForm)
+router.post('/recovery', csrfValidator, recovery)
+router.get('/recovery/:token', checkToken)
+router.post('/recovery/:token', csrfValidator, newPassword)
 
 export default router

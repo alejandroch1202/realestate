@@ -1,5 +1,6 @@
 import express from 'express'
 import router from './routes/index.js'
+import { csrfToken } from './middlewares/csrf.js'
 import db from './config/db.js'
 
 const PORT = process.env.PORT ?? 3000
@@ -7,6 +8,9 @@ const app = express()
 
 // Enable JSON from POST
 app.use(express.urlencoded({ extended: true }))
+
+// Enable CSRF
+app.use(csrfToken)
 
 // DB connection
 try {

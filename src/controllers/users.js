@@ -7,9 +7,9 @@ const createUser = async (req, res) => {
   // Validation
   await check('name')
     .notEmpty()
-    .withMessage('El nombre no puede ir vacio')
+    .withMessage('El nombre no puede ir vacío')
     .run(req)
-  await check('email').isEmail().withMessage('Coloca un correo valido').run(req)
+  await check('email').isEmail().withMessage('Coloca un correo válido').run(req)
   await check('password')
     .isLength({ min: 6 })
     .withMessage('La contraseña debe ser al menos de 6 caracteres')
@@ -67,7 +67,7 @@ const createUser = async (req, res) => {
   // Show confirm message
   res.render('templates/message', {
     page: 'Cuenta creada',
-    message: 'Hemos enviado un correo de confirmacion'
+    message: 'Hemos enviado un correo de confirmación'
   })
 }
 
