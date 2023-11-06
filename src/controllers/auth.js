@@ -1,13 +1,82 @@
 import { check, validationResult } from 'express-validator'
 import bcrypt from 'bcryptjs'
 import User from './../models/User.js'
-import { generateId } from '../helpers/token.js'
+import { generateId, generateJWT } from '../helpers/token.js'
 import { emailRecovery } from '../helpers/emails.js'
 
 const loginForm = (req, res) => {
   res.render('auth/login', {
-    page: 'Iniciar sesión'
+    page: 'Iniciar sesión',
+    csrfToken: req.csrfToken()
   })
+}
+
+const login = async (req, res) => {
+  // Validation
+  await check('email')
+    .isEmail()
+    .withMessage('El correo es obligatorio')
+    .run(req)
+  await check('password')
+    .notEmpty()
+    .withMessage('La contraseña es obligatoria')
+    .run(req)
+
+  const result = validationResult(req)
+
+  // Verify result is empty
+  if (!result.isEmpty()) {
+    return res.render('auth/login', {
+      page: 'Iniciar sesión',
+      csrfToken: req.csrfToken(),
+      errors: result.array(),
+      user: {
+        email: req.body.email
+      }
+    })
+  }
+  const { email, password } = req.body
+
+  // Check if the user exists
+  const user = await User.findOne({ where: { email } })
+  if (!user) {
+    return res.render('auth/login', {
+      page: 'Iniciar sesión',
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: 'El usuario no existe' }],
+      user: {
+        email: req.body.email
+      }
+    })
+  }
+
+  // Check if the user is confirmed
+  if (!user.confirmed) {
+    return res.render('auth/login', {
+      page: 'Iniciar sesión',
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: 'Su cuenta no ha sido confirmada' }],
+      user: {
+        email: req.body.email
+      }
+    })
+  }
+
+  // Check if the password is correct
+  const auth = await bcrypt.compare(password, user.password)
+  if (!auth) {
+    return res.render('auth/login', {
+      page: 'Iniciar sesión',
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: 'El usuario o la contraseña son incorrectos' }],
+      user: {
+        email: req.body.email
+      }
+    })
+  }
+  // Authenticate the user
+  const token = generateJWT({ id: user.id, name: user.name })
+  return res.cookie('_token', token, { httpOnly: true }).redirect('/properties')
 }
 
 const signupForm = (req, res) => {
@@ -154,6 +223,7 @@ const newPassword = async (req, res) => {
 
 export {
   loginForm,
+  login,
   signupForm,
   confirmAccount,
   recoveryForm,

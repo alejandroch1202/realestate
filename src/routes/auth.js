@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { csrfValidator } from './../middlewares/csrf.js'
 import {
   loginForm,
+  login,
   signupForm,
   confirmAccount,
   recoveryForm,
@@ -14,6 +15,7 @@ import { createUser } from './../controllers/users.js'
 const router = Router()
 
 router.get('/login', loginForm)
+router.post('/login', csrfValidator, login)
 router.get('/signup', signupForm)
 router.post('/signup', csrfValidator, createUser)
 router.get('/confirm/:token', confirmAccount)
