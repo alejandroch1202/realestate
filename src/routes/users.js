@@ -3,11 +3,7 @@ import { Router } from 'express'
 const router = Router()
 
 router.get('/', (req, res) => {
-  res.json({ ok: true, message: 'Users' })
-})
-
-router.post('/', (req, res) => {
-  res.status(201).json({ ok: true, message: 'Endpoint to create users' })
+  return res.status(501).send('We are working here...')
 })
 
 export default router
