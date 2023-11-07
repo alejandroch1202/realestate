@@ -9,7 +9,9 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "css": "postcss public/css/tailwind.css -o public/css/index.css --watch",
-    "js": "webpack --watch"
+    "js": "webpack --watch",
+    "db:import": "node seed/seeder.js -i",
+    "db:delete": "node seed/seeder.js -d"
   },
   "keywords": [
     "node",
