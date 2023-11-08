@@ -1,6 +1,6 @@
 import db from './../src/config/db.js'
-import Category from './../src/models/Category.js'
-import Price from './../src/models/Price.js'
+import { User, Category, Price } from './../src/models/index.js'
+import users from './users.js'
 import categories from './categories.js'
 import prices from './prices.js'
 
@@ -14,6 +14,7 @@ const importData = async () => {
 
     // Insert data
     await Promise.all([
+      User.bulkCreate(users),
       Category.bulkCreate(categories),
       Price.bulkCreate(prices)
     ])
@@ -28,10 +29,11 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     // Delete data
-    await Promise.all([
-      Category.destroy({ where: {}, truncate: true }),
-      Price.destroy({ where: {}, truncate: true })
-    ])
+    // await Promise.all([
+    //   Category.destroy({ where: {}, truncate: true }),
+    //   Price.destroy({ where: {}, truncate: true })
+    // ])
+    await db.sync({ force: true })
     console.log('Data sucessfully deleted')
     process.exit()
   } catch (error) {

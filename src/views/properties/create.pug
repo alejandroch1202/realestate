@@ -9,29 +9,40 @@ block content
       span(class="font-normal") Raices
     h2(class="text-center text-2xl font-extrabold")= page
 
+    if errors
+      div(class="max-w-md mx-auto my-10")
+        each error in errors
+          p(class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold")= error.msg
+
     div(class="bg-white shadow py-8 px-4 md:px-10 rounded-md mx-auto max-w-4xl my-10")
-      form(class="space-y-8")
+      form(class="space-y-8" method="POST")
+        input(type="hidden" name="_csrf" value= csrfToken)
+
         div(class="space-y-5")
           h3(class="text-lg leading-6 font-medium text-gray-900") Información General
           p(class="text-gray-600") Añade información de la propiedad en venta
 
           div
             label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="title") Título de anuncio
-            input(id="title" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Título de la propiedad" type="text" name="title" value= property ? property.title : "")
+            input(id="title" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Título de la propiedad" type="text" name="title" value= data ? data.title : "")
 
           div
             label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="description") Descripción
-            textarea(id="description" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Descripción de la propiedad" name="description" value= property ? property.description : "")
+            textarea(id="description" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Descripción de la propiedad" name="description")= data ? data.description : ""
 
           div(class="md:flex md:gap-4 space-y-5 md:space-y-0")
             div(class="md:w-1/2")
               label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="category") Categoría
               select(id="category" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="category")
                 option(value="") -- Seleccionar --
+                each category in categories
+                  option(value=category.id selected= data.category ? data.category == category.id ? true : false : null )= category.name
             div(class="md:w-1/2")
               label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="price") Precio
               select(id="price" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="price")
                 option(value="") -- Seleccionar --
+                each price in prices
+                  option(value=price.id selected= data.price ? data.price == price.id ? true : false : null)= price.range
 
           div(class="md:flex md:gap-4 space-y-5 md:space-y-0")
             div(class="md:w-1/3")
@@ -40,7 +51,7 @@ block content
                 option(value="") -- Seleccionar --
                 - let rooms = 1;
                     while rooms < 7
-                      option(value=rooms) #{rooms++}
+                      option(value=rooms selected= data.rooms ? data.rooms == rooms ? true : false : null) #{rooms++}
 
             div(class="md:w-1/3")
               label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="wc") Baños
@@ -48,26 +59,29 @@ block content
                 option(value="") -- Seleccionar --
                   - let wc = 1;
                       while wc < 5
-                        option(value=wc) #{wc++}
+                        option(value=wc selected= data.wc ? data.wc == wc ? true : false : null) #{wc++}
             div(class="md:w-1/3")
               label(class="block text-sm uppercase text-gray-500 mb-3 font-bold" for="garages") Estacionamientos
               select(id="garages" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="garages")
                 option(value="") -- Seleccionar --
                   - let garages = 1;
                       while garages < 5
-                        option(value=garages) #{garages++}
+                        option(value=garages selected= data.garages ? data.garages == garages ? true : false : null) #{garages++}
           div(class="border-gray-200 border-t py-5 space-y-5")
             h3(class="text-lg leading-6 font-medium text-gray-900") Ubicación
             p(class="text-gray-600") Ubica la propiedad en el mapa
             
-          div(id="map" class="h-96 rounded-md")
+            div(id="map" class="h-96 rounded-md")
 
-          div
-            p(class="street")
+            div
+              p(class="street")= data.street ? data.street : ''
 
-          input(type="hidden" name="street" id="street")
-          input(type="hidden" name="lat" id="lat")
-          input(type="hidden" name="lng" id="lng")
+            input(type="hidden" name="street" id="street" value= data.street ? data.street : '')
+            input(type="hidden" name="lat" id="lat" value= data.lat ? data.lat : '')
+            input(type="hidden" name="lng" id="lng" value= data.lng ? data.lng : '')
+
+          div(class="border-gray-200 border-t py-5 space-y-5")
+            input(class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-bold uppercase cursor-pointer" type="submit" value="Añadir imágen")
 
 block scripts 
   script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")

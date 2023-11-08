@@ -1,4 +1,5 @@
 import express from 'express'
+import cookieParser from 'cookie-parser'
 import router from './routes/index.js'
 import { csrfToken } from './middlewares/csrf.js'
 import db from './config/db.js'
@@ -8,6 +9,9 @@ const app = express()
 
 // Enable JSON from POST
 app.use(express.urlencoded({ extended: true }))
+
+// Enable cookies
+app.use(cookieParser())
 
 // Enable CSRF
 app.use(csrfToken)
