@@ -1,8 +1,15 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { csrfValidator } from './../middlewares/csrf.js'
+import { csrfValidator, csrfValidatorDropzone } from './../middlewares/csrf.js'
 import protectRoutes from './../middlewares/protectRoutes.js'
-import { admin, createForm, create } from '../controllers/properties.js'
+import upload from '../middlewares/uploadImage.js'
+import {
+  admin,
+  createForm,
+  create,
+  addImage,
+  uploadImage
+} from '../controllers/properties.js'
 
 const router = Router()
 
@@ -29,6 +36,14 @@ router.post(
     .withMessage('Selecciona la cantidad de estacionamientos'),
   body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
   create
+)
+router.get('/image/:id', protectRoutes, addImage)
+router.post(
+  '/image/:id',
+  protectRoutes,
+  csrfValidatorDropzone,
+  upload.single('image'),
+  uploadImage
 )
 
 export default router

@@ -18,4 +18,13 @@ const csrfValidator = (req, res, next) => {
   next()
 }
 
-export { csrfToken, csrfValidator }
+// Validate CSRF token Dropzone
+const csrfValidatorDropzone = (req, res, next) => {
+  const secret = process.env.CSRF_SECRET
+  const _csrf = req.headers['csrf-token']
+  const verify = tokens.verify(secret, _csrf)
+  if (!verify) return res.status(422).send('Invalid token')
+  next()
+}
+
+export { csrfToken, csrfValidator, csrfValidatorDropzone }

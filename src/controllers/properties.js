@@ -3,8 +3,7 @@ import { Property, Category, Price } from './../models/index.js'
 
 const admin = (req, res) => {
   res.render('properties/admin', {
-    page: 'Mis Propiedades',
-    navigation: true
+    page: 'Mis Propiedades'
   })
 }
 
@@ -18,7 +17,7 @@ const createForm = async (req, res) => {
   res.render('properties/create', {
     page: 'Crear propiedad',
     csrfToken: req.csrfToken(),
-    navigation: true,
+
     categories,
     prices,
     data: {}
@@ -38,7 +37,7 @@ const create = async (req, res) => {
     return res.render('properties/create', {
       page: 'Crear propiedad',
       csrfToken: req.csrfToken(),
-      navigation: true,
+
       categories,
       prices,
       errors: result.array(),
@@ -83,4 +82,57 @@ const create = async (req, res) => {
   }
 }
 
-export { admin, createForm, create }
+const addImage = async (req, res) => {
+  const { id } = req.params
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the property is not published
+  if (property.published) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the property is owned by the user
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/properties')
+  }
+
+  res.render('properties/image', {
+    page: `Agregar imagen: ${property.title}`,
+    csrfToken: req.csrfToken(),
+    property
+  })
+}
+
+const uploadImage = async (req, res, next) => {
+  const { id } = req.params
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the property is not published
+  if (property.published) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the property is owned by the user
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/properties')
+  }
+  try {
+    // Store the image and publish the property
+    property.image = req.file.filename
+    property.published = 1
+    await property.save()
+    next()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { admin, createForm, create, addImage, uploadImage }
