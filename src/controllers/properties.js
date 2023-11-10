@@ -1,3 +1,4 @@
+import { unlink } from 'node:fs/promises'
 import { validationResult } from 'express-validator'
 import { Property, Category, Price } from './../models/index.js'
 
@@ -13,6 +14,7 @@ const admin = async (req, res) => {
 
   res.render('properties/admin', {
     page: 'Mis Propiedades',
+    csrfToken: req.csrfToken(),
     properties
   })
 }
@@ -242,4 +244,36 @@ const edit = async (req, res) => {
   }
 }
 
-export { admin, createForm, create, addImage, uploadImage, editForm, edit }
+const remove = async (req, res) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the user is owner of the property
+  const user = req.user
+  if (user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/properties')
+  }
+
+  // Delete associated image
+  await unlink(`public/uploads/${property.image}`)
+
+  // Delete the property
+  await property.destroy()
+  res.redirect('/properties')
+}
+
+export {
+  admin,
+  createForm,
+  create,
+  addImage,
+  uploadImage,
+  editForm,
+  edit,
+  remove
+}

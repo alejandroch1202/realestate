@@ -10,7 +10,8 @@ import {
   addImage,
   uploadImage,
   editForm,
-  edit
+  edit,
+  remove
 } from '../controllers/properties.js'
 
 const router = Router()
@@ -76,5 +77,7 @@ router.post(
   body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
   edit
 )
+
+router.post('/delete/:id', protectRoutes, csrfValidator, remove)
 
 export default router
