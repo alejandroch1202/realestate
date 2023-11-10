@@ -145,4 +145,101 @@ const uploadImage = async (req, res, next) => {
   }
 }
 
-export { admin, createForm, create, addImage, uploadImage }
+const editForm = async (req, res) => {
+  const { id } = req.params
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the user is owner of the property
+  const user = req.user
+  if (user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/properties')
+  }
+
+  // Query categories and prices
+  const [categories, prices] = await Promise.all([
+    Category.findAll(),
+    Price.findAll()
+  ])
+
+  res.render('properties/edit', {
+    page: `Editar propiedad: ${property.title}`,
+    csrfToken: req.csrfToken(),
+    categories,
+    prices,
+    data: property
+  })
+}
+
+const edit = async (req, res) => {
+  // Validation result
+  const result = validationResult(req)
+  if (!result.isEmpty()) {
+    // Query categories and prices
+    const [categories, prices] = await Promise.all([
+      Category.findAll(),
+      Price.findAll()
+    ])
+
+    return res.render('properties/edit', {
+      page: 'Editar propiedad',
+      csrfToken: req.csrfToken(),
+      categories,
+      prices,
+      errors: result.array(),
+      data: req.body
+    })
+  }
+
+  const { id } = req.params
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the user is owner of the property
+  const user = req.user
+  if (user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/properties')
+  }
+
+  // Edit the entry
+  try {
+    const {
+      title,
+      description,
+      category: categoryId,
+      price: priceId,
+      rooms,
+      wc,
+      garages,
+      street,
+      lat,
+      lng
+    } = req.body
+
+    property.set({
+      title,
+      description,
+      categoryId,
+      priceId,
+      rooms,
+      wc,
+      garages,
+      street,
+      lat,
+      lng
+    })
+    await property.save()
+
+    res.redirect(`/properties/image/${id}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { admin, createForm, create, addImage, uploadImage, editForm, edit }
