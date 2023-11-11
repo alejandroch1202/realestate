@@ -11,7 +11,8 @@ import {
   uploadImage,
   editForm,
   edit,
-  remove
+  remove,
+  showProperty
 } from '../controllers/properties.js'
 
 const router = Router()
@@ -79,5 +80,9 @@ router.post(
 )
 
 router.post('/delete/:id', protectRoutes, csrfValidator, remove)
+
+// Public routes
+
+router.get('/:id', showProperty)
 
 export default router

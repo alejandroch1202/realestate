@@ -267,6 +267,33 @@ const remove = async (req, res) => {
   res.redirect('/properties')
 }
 
+// Public routes
+const showProperty = async (req, res) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id, {
+    include: [
+      { model: Category, as: 'category' },
+      { model: Price, as: 'price' }
+    ]
+  })
+  if (!property) {
+    return res.redirect('/404')
+  }
+
+  // Validate that the property is published
+  if (!property.published) {
+    return res.redirect('/404')
+  }
+
+  res.render('properties/show', {
+    page: property.title,
+    csrfToken: req.csrfToken(),
+    property
+  })
+}
+
 export {
   admin,
   createForm,
@@ -275,5 +302,6 @@ export {
   uploadImage,
   editForm,
   edit,
-  remove
+  remove,
+  showProperty
 }
