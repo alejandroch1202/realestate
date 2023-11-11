@@ -3,20 +3,48 @@ import { validationResult } from 'express-validator'
 import { Property, Category, Price } from './../models/index.js'
 
 const admin = async (req, res) => {
-  const { id } = req.user
-  const properties = await Property.findAll({
-    where: { userId: id },
-    include: [
-      { model: Category, as: 'category' },
-      { model: Price, as: 'price' }
-    ]
-  })
+  // Read the query string
+  const { page: currentPage } = req.query
+  const regex = /^[1-9]$/
+  if (!regex.test(currentPage)) {
+    return res.redirect('/properties?page=1')
+  }
 
-  res.render('properties/admin', {
-    page: 'Mis Propiedades',
-    csrfToken: req.csrfToken(),
-    properties
-  })
+  try {
+    const { id } = req.user
+
+    // Limit and offset
+    const limit = 2
+    const offset = currentPage * limit - limit
+
+    const [properties, total] = await Promise.all([
+      Property.findAll({
+        limit,
+        offset,
+        where: { userId: id },
+        include: [
+          { model: Category, as: 'category' },
+          { model: Price, as: 'price' }
+        ]
+      }),
+      Property.count({
+        where: { userId: id }
+      })
+    ])
+
+    res.render('properties/admin', {
+      page: 'Mis Propiedades',
+      csrfToken: req.csrfToken(),
+      properties,
+      pages: Math.ceil(total / limit),
+      currentPage: Number(currentPage),
+      total,
+      limit,
+      offset
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const createForm = async (req, res) => {
