@@ -3,6 +3,13 @@ header(class="bg-indigo-600 p-4")
     h1(class="text-2xl text-white font-extrabold text-center") Bienes 
       span(class="font-normal") Raices
     nav(class="my-5 text-sm md:flex md:items-center md:gap-3 font-bold text-white hidden")
-      a(href="#") Propiedades
-      a(href="#") Perfil
-      a(href="#" class="bg-indigo-800 py-2 px-6 rounded-md") Cerrar sesión
+      a(href="/auth/login") Iniciar sesión
+      a(href="/auth/signup" class="bg-indigo-800 py-2 px-6 rounded-md") Crear cuenta
+
+div(class="bg-indigo-700 py-5 hidden lg:block")
+  div(class="container mx-auto flex justify-between")
+    a(href="/categories/1" class="text-sm font-bold uppercase text-white") Casas
+    a(href="/categories/2" class="text-sm font-bold uppercase text-white") Apartamentos
+    a(href="/categories/3" class="text-sm font-bold uppercase text-white") Almacenes
+    a(href="/categories/4" class="text-sm font-bold uppercase text-white") Terrenos
+    a(href="/categories/5" class="text-sm font-bold uppercase text-white") Cabañas

@@ -32,10 +32,6 @@ app.set('views', './src/views')
 // Public folder
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
-  res.json({ ok: true, message: 'Welcome to the server' })
-})
-
 router(app)
 
 app.listen(PORT, () => {
