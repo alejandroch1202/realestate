@@ -1,15 +1,29 @@
-import { Category, Price } from './../models/index.js'
+import { Category, Price, Property } from './../models/index.js'
 
 const home = async (req, res) => {
-  const [categories, prices] = await Promise.all([
+  const [categories, prices, houses, apartments] = await Promise.all([
     Category.findAll({ raw: true }),
-    Price.findAll({ raw: true })
+    Price.findAll({ raw: true }),
+    Property.findAll({
+      limit: 3,
+      where: { categoryId: 1 },
+      include: [{ model: Price, as: 'price' }],
+      order: [['createdAt', 'DESC']]
+    }),
+    Property.findAll({
+      limit: 3,
+      where: { categoryId: 2 },
+      include: [{ model: Price, as: 'price' }],
+      order: [['createdAt', 'DESC']]
+    })
   ])
 
   return res.render('home', {
     page: 'Inicio',
     categories,
-    prices
+    prices,
+    houses,
+    apartments
   })
 }
 
