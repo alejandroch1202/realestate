@@ -14,7 +14,7 @@ const admin = async (req, res) => {
     const { id } = req.user
 
     // Limit and offset
-    const limit = 2
+    const limit = 10
     const offset = currentPage * limit - limit
 
     const [properties, total] = await Promise.all([

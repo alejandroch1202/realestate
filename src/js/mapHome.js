@@ -3,6 +3,25 @@
   const lng = -68.7335184
   const map = L.map('map-home').setView([lat, lng], 13)
   let markers = new L.FeatureGroup().addTo(map)
+  let properties = []
+
+  // Filters
+  const filters = {
+    category: '',
+    price: ''
+  }
+
+  const categories = document.querySelector('#categories')
+  const prices = document.querySelector('#prices')
+
+  categories.addEventListener('change', (e) => {
+    filters.category = Number(e.target.value)
+    filterProperties()
+  })
+  prices.addEventListener('change', (e) => {
+    filters.price = Number(e.target.value)
+    filterProperties()
+  })
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:
@@ -12,16 +31,18 @@
   const listProperties = async () => {
     try {
       const url = '/api/properties'
-      const properties = await fetch(url)
-      const result = await properties.json()
-      return result
+      const result = await fetch(url)
+      properties = await result.json()
+      showProperties(properties)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const showProperties = async () => {
-    const properties = await listProperties()
+  const showProperties = async (properties) => {
+    // Clean previous markers
+    markers.clearLayers()
+
     properties.forEach((property) => {
       // Add pins
       const marker = new L.marker([property?.lat, property?.lng], {
@@ -38,5 +59,20 @@
     })
   }
 
-  showProperties()
+  const filterProperties = () => {
+    const result = properties.filter(filterByCategory).filter(filterByPrice)
+    showProperties(result)
+  }
+
+  const filterByCategory = (property) => {
+    return filters.category
+      ? property.categoryId === filters.category
+      : property
+  }
+
+  const filterByPrice = (property) => {
+    return filters.price ? property.priceId === filters.price : property
+  }
+
+  listProperties()
 })()
