@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { csrfValidator, csrfValidatorDropzone } from './../middlewares/csrf.js'
 import protectRoutes from './../middlewares/protectRoutes.js'
 import upload from '../middlewares/uploadImage.js'
+import indentifyUser from './../middlewares/indentifyUser.js'
 import {
   admin,
   createForm,
@@ -83,6 +84,6 @@ router.post('/delete/:id', protectRoutes, csrfValidator, remove)
 
 // Public routes
 
-router.get('/:id', showProperty)
+router.get('/:id', indentifyUser, showProperty)
 
 export default router

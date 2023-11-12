@@ -52,7 +52,8 @@
         <h1 class="text-xl font-extrabold uppercase my-2">${property?.title}</h1>
         <img src="/uploads/${property?.image}" alt="Imagen de ${property.title}">
         <p class="text-gray-600 font-bold">${property.price.range}</p>
-        <a href="/properties/${property?.id}" class="block bg-indigo-600 hover:bg-indigo-700 text-center font-bold uppercase py-2 px-4 rounded-md">Ver Propiedad</a>
+        <a href="/properties/${property?.id}" class="block bg-indigo-600 hover:bg-indigo-700 text-center font-bold uppercase py-2 px-4 rounded-md">
+          <span class="text-white">Ver Propiedad</span></a>
         `)
 
       markers.addLayer(marker)
