@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { Category, Price, Property } from './../models/index.js'
 
 const home = async (req, res) => {
@@ -20,6 +21,7 @@ const home = async (req, res) => {
 
   return res.render('home', {
     page: 'Inicio',
+    csrfToken: req.csrfToken(),
     categories,
     prices,
     houses,
@@ -46,16 +48,40 @@ const categories = async (req, res) => {
     page: `${category.name}${
       category.name === 'Almacen' ? 'es' : 's'
     } en Venta`,
+    csrfToken: req.csrfToken(),
     properties
   })
 }
 
 const notFound = (req, res) => {
   res.render('404', {
-    page: 'No encontrado'
+    page: 'No encontrado',
+    csrfToken: req.csrfToken()
   })
 }
 
-const search = (req, res) => {}
+const search = async (req, res) => {
+  // Validate that term is not void
+  const { term } = req.body
+  if (!term.trim()) {
+    return res.redirect('back')
+  }
+
+  // Get the properties
+  const properties = await Property.findAll({
+    where: {
+      title: {
+        [Op.like]: '%' + term + '%'
+      }
+    },
+    include: [{ model: Price, as: 'price' }]
+  })
+
+  res.render('search', {
+    page: 'Resultados de la búsqueda',
+    csrfToken: req.csrfToken(),
+    properties
+  })
+}
 
 export { home, categories, notFound, search }
