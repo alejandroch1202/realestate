@@ -590,6 +590,9 @@ video {
 .h-auto {
   height: auto;
 }
+.h-full {
+  height: 100%;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -601,6 +604,9 @@ video {
 }
 .w-full {
   width: 100%;
+}
+.w-\[100vw\] {
+  width: 100vw;
 }
 .max-w-4xl {
   max-width: 56rem;
@@ -825,6 +831,9 @@ video {
 .text-center {
   text-align: center;
 }
+.align-bottom {
+  vertical-align: bottom;
+}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -924,6 +933,10 @@ video {
 .text-yellow-800 {
   --tw-text-opacity: 1;
   color: rgb(133 77 14 / var(--tw-text-opacity));
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 .placeholder-gray-400::-moz-placeholder {
   --tw-placeholder-opacity: 1;
