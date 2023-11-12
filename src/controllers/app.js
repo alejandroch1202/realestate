@@ -51,7 +51,9 @@ const categories = async (req, res) => {
 }
 
 const notFound = (req, res) => {
-  return res.send('Not found')
+  res.render('404', {
+    page: 'No encontrado'
+  })
 }
 
 const search = (req, res) => {}
