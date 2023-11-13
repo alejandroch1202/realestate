@@ -79,6 +79,10 @@ const login = async (req, res) => {
   return res.cookie('_token', token, { httpOnly: true }).redirect('/properties')
 }
 
+const logout = async (req, res) => {
+  return res.clearCookie('_token').status(200).redirect('/auth/login')
+}
+
 const signupForm = (req, res) => {
   res.render('auth/signup', {
     page: 'Crear cuenta',
@@ -224,6 +228,7 @@ const newPassword = async (req, res) => {
 export {
   loginForm,
   login,
+  logout,
   signupForm,
   confirmAccount,
   recoveryForm,

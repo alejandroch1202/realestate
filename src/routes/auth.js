@@ -3,6 +3,7 @@ import { csrfValidator } from './../middlewares/csrf.js'
 import {
   loginForm,
   login,
+  logout,
   signupForm,
   confirmAccount,
   recoveryForm,
@@ -16,6 +17,7 @@ const router = Router()
 
 router.get('/login', loginForm)
 router.post('/login', csrfValidator, login)
+router.post('/logout', csrfValidator, logout)
 router.get('/signup', signupForm)
 router.post('/signup', csrfValidator, createUser)
 router.get('/confirm/:token', confirmAccount)
