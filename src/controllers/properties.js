@@ -1,6 +1,6 @@
 import { unlink } from 'node:fs/promises'
 import { validationResult } from 'express-validator'
-import { Property, Category, Price } from './../models/index.js'
+import { Property, Category, Price, Message } from './../models/index.js'
 import { isSeller } from '../helpers/index.js'
 
 const admin = async (req, res) => {
@@ -25,7 +25,8 @@ const admin = async (req, res) => {
         where: { userId: id },
         include: [
           { model: Category, as: 'category' },
-          { model: Price, as: 'price' }
+          { model: Price, as: 'price' },
+          { model: Message, as: 'messages' }
         ]
       }),
       Property.count({
@@ -325,6 +326,52 @@ const showProperty = async (req, res) => {
   })
 }
 
+const sendMessage = async (req, res) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id, {
+    include: [
+      { model: Category, as: 'category' },
+      { model: Price, as: 'price' }
+    ]
+  })
+  if (!property) {
+    return res.redirect('/404')
+  }
+
+  // Validate that the property is published
+  if (!property.published) {
+    return res.redirect('/404')
+  }
+
+  // Validation result
+  const result = validationResult(req)
+  if (!result.isEmpty()) {
+    return res.render('properties/show', {
+      page: property.title,
+      csrfToken: req.csrfToken(),
+      property,
+      user: req.user,
+      isSeller: isSeller(req.user?.id, property.userId),
+      errors: result.array()
+    })
+  }
+
+  // Save the message
+  const { message } = req.body
+  const { id: userId } = req.user
+  const { id: propertyId } = property
+
+  await Message.create({
+    message,
+    userId,
+    propertyId
+  })
+
+  res.redirect('back')
+}
+
 export {
   admin,
   createForm,
@@ -334,5 +381,6 @@ export {
   editForm,
   edit,
   remove,
-  showProperty
+  showProperty,
+  sendMessage
 }

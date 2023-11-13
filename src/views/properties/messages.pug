@@ -1,0 +1,24 @@
+extends ./../layout/admin
+
+block content 
+  h2(class="text-center text-2xl font-extrabold mt-10")= page
+
+  a(href="/properties" class="py-2 px-6 bg-indigo-600 rounded-md hover:bg-indigo-700 text-white text-sm text-center font-bold uppercase inline-block my-5 w-full sm:w-auto") Volver
+
+  div(class="mx-auto max-w-4xl bg-white shadow")
+    if messages.length
+      ul 
+        each message in messages 
+          li(class="border-gray-200 border-b p-5")
+            p(class="font-bold text-gray-800") Nombre: 
+              span(class="font-normal")= message.user.name
+            p(class="font-bold text-gray-800") Email: 
+              span(class="font-normal")= message.user.email
+            p(class="font-bold text-gray-800") Mensaje: 
+              span(class="font-normal")= message.message
+            p(class="font-bold text-gray-800") Hora: 
+              span(class="font-normal")= formatTime(message.createdAt)
+            p(class="font-bold text-gray-800") Fecha: 
+              span(class="font-normal")= formatDate(message.createdAt)
+    else
+      p(class="text-center tex-gray-600 p-5") No hay mensajes

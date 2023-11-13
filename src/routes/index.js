@@ -3,6 +3,7 @@ import main from './app.js'
 import api from './api.js'
 import auth from './auth.js'
 import users from './users.js'
+import messages from './messages.js'
 import properties from './properties.js'
 
 const apiRouter = (app) => {
@@ -13,6 +14,7 @@ const apiRouter = (app) => {
   router.use('/api', api)
   router.use('/auth', auth)
   router.use('/users', users)
+  router.use('/messages', messages)
   router.use('/properties', properties)
 }
 

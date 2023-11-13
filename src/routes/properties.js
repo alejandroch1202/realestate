@@ -13,7 +13,8 @@ import {
   editForm,
   edit,
   remove,
-  showProperty
+  showProperty,
+  sendMessage
 } from '../controllers/properties.js'
 
 const router = Router()
@@ -83,7 +84,16 @@ router.post(
 router.post('/delete/:id', protectRoutes, csrfValidator, remove)
 
 // Public routes
-
 router.get('/:id', indentifyUser, showProperty)
+
+router.post(
+  '/:id',
+  indentifyUser,
+  csrfValidator,
+  body('message')
+    .isLength({ min: 10 })
+    .withMessage('El mensaje no puede ir vacío o es muy corto'),
+  sendMessage
+)
 
 export default router
