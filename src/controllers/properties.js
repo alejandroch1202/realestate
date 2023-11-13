@@ -297,6 +297,28 @@ const remove = async (req, res) => {
   res.redirect('/properties')
 }
 
+const changeState = async (req, res) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/properties')
+  }
+
+  // Validate that the user is owner of the property
+  const user = req.user
+  if (user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/properties')
+  }
+
+  // Change the state
+  property.published = !property.published
+  await property.save()
+
+  res.json({ ok: true })
+}
+
 // Public routes
 const showProperty = async (req, res) => {
   const { id } = req.params
@@ -381,6 +403,7 @@ export {
   editForm,
   edit,
   remove,
+  changeState,
   showProperty,
   sendMessage
 }

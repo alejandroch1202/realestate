@@ -1,4 +1,8 @@
 extends ./../layout/admin
+
+block styles 
+  meta(name="csrf-token" content= csrfToken)
+
 block content 
   div(class="py-10")
     h1(class="text-4xl my-10 font-extrabold text-center") Bienes
@@ -27,9 +31,8 @@ block content
 
                   a(href=`/messages/${property.id}` class="text-sm text-gray-600")= `${property.messages.length} Mensajes` 
 
-                div(class="sm:w-1/4 md:w-2/6 lg:flex-1 flex flex-col gap-2 lg:flex-row")
-                  form(action="#")
-                    input(type="submit" class=`${property.published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer` value=`${property.published ? 'Publicado' : 'No publicado'}`)
+                div(class="sm:w-1/4 md:w-2/6 lg:w-1/6 flex flex-col gap-2 2xl:flex-row")
+                  button(type="button" data-property-id=`${property.id}` class=`${property.published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} change-status w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer`)= `${property.published ? 'Publicado' : 'No publicado'}`
 
                   a(href=`/properties/edit/${property.id}` class="text-center bg-indigo-100 text-indigo-800 px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer") Editar
 
@@ -56,3 +59,6 @@ block content
                   a(href=`/properties?page=${n}` class=`${ currentPage == n ? 'bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50' } relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++} 
     else
       p(class="text-center") No hay propiedades
+
+block scripts 
+  script(src="/js/changeStatus.js")

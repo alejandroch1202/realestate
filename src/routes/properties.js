@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { csrfValidator, csrfValidatorDropzone } from './../middlewares/csrf.js'
+import { csrfValidator, csrfValidatorHeader } from './../middlewares/csrf.js'
 import protectRoutes from './../middlewares/protectRoutes.js'
 import upload from '../middlewares/uploadImage.js'
 import indentifyUser from './../middlewares/indentifyUser.js'
@@ -13,6 +13,7 @@ import {
   editForm,
   edit,
   remove,
+  changeState,
   showProperty,
   sendMessage
 } from '../controllers/properties.js'
@@ -51,7 +52,7 @@ router.get('/image/:id', protectRoutes, addImage)
 router.post(
   '/image/:id',
   protectRoutes,
-  csrfValidatorDropzone,
+  csrfValidatorHeader,
   upload.single('image'),
   uploadImage
 )
@@ -82,6 +83,8 @@ router.post(
 )
 
 router.post('/delete/:id', protectRoutes, csrfValidator, remove)
+
+router.patch('/:id', protectRoutes, csrfValidatorHeader, changeState)
 
 // Public routes
 router.get('/:id', indentifyUser, showProperty)

@@ -18,8 +18,8 @@ const csrfValidator = (req, res, next) => {
   next()
 }
 
-// Validate CSRF token Dropzone
-const csrfValidatorDropzone = (req, res, next) => {
+// Validate CSRF token header
+const csrfValidatorHeader = (req, res, next) => {
   const secret = process.env.CSRF_SECRET
   const _csrf = req.headers['csrf-token']
   const verify = tokens.verify(secret, _csrf)
@@ -27,4 +27,4 @@ const csrfValidatorDropzone = (req, res, next) => {
   next()
 }
 
-export { csrfToken, csrfValidator, csrfValidatorDropzone }
+export { csrfToken, csrfValidator, csrfValidatorHeader }
