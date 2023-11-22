@@ -33,7 +33,7 @@ app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 
 // Public folder
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, '../public/')))
 
 router(app)
 
