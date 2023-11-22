@@ -1,9 +1,12 @@
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import router from './routes/index.js'
 import { csrfToken } from './middlewares/csrf.js'
 import db from './config/db.js'
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const PORT = process.env.PORT ?? 3000
 const app = express()
 
@@ -27,7 +30,7 @@ try {
 
 // Enable Pug
 app.set('view engine', 'pug')
-app.set('views', './src/views')
+app.set('views', path.join(__dirname, 'views'))
 
 // Public folder
 app.use(express.static('public'))
