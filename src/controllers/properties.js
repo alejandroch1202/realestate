@@ -1,7 +1,11 @@
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { unlink } from 'node:fs/promises'
 import { validationResult } from 'express-validator'
 import { Property, Category, Price, Message } from './../models/index.js'
 import { isSeller } from '../helpers/index.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const admin = async (req, res) => {
   // Read the query string
@@ -290,7 +294,7 @@ const remove = async (req, res) => {
   }
 
   // Delete associated image
-  await unlink(`public/uploads/${property.image}`)
+  await unlink(path.join(__dirname, `./../../public/uploads/${property.image}`))
 
   // Delete the property
   await property.destroy()
