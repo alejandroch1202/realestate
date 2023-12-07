@@ -46,7 +46,7 @@ const categories = async (req, res) => {
 
   res.render('category', {
     page: `${category.name}${
-      category.name === 'Almacen' ? 'es' : 's'
+      category.name === 'Galpon' || category.name === 'Local' ? 'es' : 's'
     } en Venta`,
     csrfToken: req.csrfToken(),
     properties

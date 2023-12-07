@@ -1,9 +1,12 @@
 const categories = [
   { name: 'Casa' },
   { name: 'Apartamento' },
-  { name: 'Almacen' },
+  { name: 'Edificio' },
   { name: 'Terreno' },
-  { name: 'Cabaña' }
+  { name: 'Granja' },
+  { name: 'Finca' },
+  { name: 'Local' },
+  { name: 'Galpon' }
 ]
 
 export default categories
