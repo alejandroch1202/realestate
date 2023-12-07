@@ -7,13 +7,13 @@ const home = async (req, res) => {
     Price.findAll({ raw: true }),
     Property.findAll({
       limit: 3,
-      where: { categoryId: 1 },
+      where: { categoryId: 1, published: 1 },
       include: [{ model: Price, as: 'price' }],
       order: [['createdAt', 'DESC']]
     }),
     Property.findAll({
       limit: 3,
-      where: { categoryId: 2 },
+      where: { categoryId: 1, published: 1 },
       include: [{ model: Price, as: 'price' }],
       order: [['createdAt', 'DESC']]
     })
@@ -40,7 +40,7 @@ const categories = async (req, res) => {
 
   // Get the properties of the category
   const properties = await Property.findAll({
-    where: { categoryId: id },
+    where: { categoryId: 1, published: 1 },
     include: [{ model: Price, as: 'price' }]
   })
 
@@ -70,6 +70,7 @@ const search = async (req, res) => {
   // Get the properties
   const properties = await Property.findAll({
     where: {
+      published: 1,
       title: {
         [Op.like]: '%' + term + '%'
       }
