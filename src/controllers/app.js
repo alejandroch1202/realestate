@@ -13,7 +13,7 @@ const home = async (req, res) => {
     }),
     Property.findAll({
       limit: 3,
-      where: { categoryId: 1, published: 1 },
+      where: { categoryId: 2, published: 1 },
       include: [{ model: Price, as: 'price' }],
       order: [['createdAt', 'DESC']]
     })
@@ -40,7 +40,7 @@ const categories = async (req, res) => {
 
   // Get the properties of the category
   const properties = await Property.findAll({
-    where: { categoryId: 1, published: 1 },
+    where: { categoryId: id, published: 1 },
     include: [{ model: Price, as: 'price' }]
   })
 
