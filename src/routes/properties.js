@@ -32,7 +32,7 @@ router.post(
   body('description')
     .notEmpty()
     .withMessage('La descripción no puede ir vacía')
-    .isLength({ max: 200 })
+    .isLength({ max: 500 })
     .withMessage('La descripción es muy larga'),
   body('category').isNumeric().withMessage('Selecciona una categoría'),
   body('price').isNumeric().withMessage('Selecciona un rango de precios'),
@@ -67,7 +67,7 @@ router.post(
   body('description')
     .notEmpty()
     .withMessage('La descripción no puede ir vacía')
-    .isLength({ max: 200 })
+    .isLength({ max: 500 })
     .withMessage('La descripción es muy larga'),
   body('category').isNumeric().withMessage('Selecciona una categoría'),
   body('price').isNumeric().withMessage('Selecciona un rango de precios'),
