@@ -14,10 +14,26 @@ block content
         span(class="font-normal")= property.category.name
     div(class="mt-5 md:flex md:gap-4 md:items-start")
       div(class="md:w-2/3 bg-white shadow rounded-md overflow-hidden")
-        img(src=`/uploads/${property.image}`, alt=`imagen ${property.title}`)
+
+        //- Slideshow container
+        div(class="slideshow-container")
+          each image, index in images
+            //- Full-width images with number and caption text
+            div(class="mySlides fade")
+              div(class="numbertext")= `${index + 1} / ${images.length}`
+              img(src=`/uploads/${image}` class="w-full h-[400px] md:h-[600px] object-cover property-image" alt=`imagen ${property.title}`)
         
+          //- Next and previous buttons
+          a(class="prev" onclick="plusSlides(-1)") &#10094;
+          a(class="next" onclick="plusSlides(1)") &#10095;
+
+          //- The dots/circles
+          div(class="text-center dot-container")
+            each image, index in images
+              span(class="dot" onclick=`currentSlide(${ index + 1 })`)
+    
         div(class="px-5 py-10 space-y-5")
-          p()= property.description
+          p= property.description
           h2(class="text-2xl leading-6 font-bold text-gray-900 ") Información Propiedad
         
           div(class="grid grid-cols-1 md:grid-cols-2")
@@ -29,7 +45,7 @@ block content
               span(class="text-gray-800 block text-lg")= property.garages
             p(class="text-gray-600 font-bold text-xs") Precio
               span(class="text-gray-800 block text-lg")= property.price.range
-      
+        
       aside(class="md:w-1/3 bg-white shadow rounded-md overflow-hidden")
         h3(class="text-center py-10 leading-6 text-2xl font-bold text-gray-900 ") Ubicación
 
@@ -68,3 +84,5 @@ block content
 block scripts 
   script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
   script(src="/js/showMap.js")
+  script(src="/js/carousel.js")
+

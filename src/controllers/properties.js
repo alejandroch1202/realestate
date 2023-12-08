@@ -2,7 +2,7 @@ import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { unlink } from 'node:fs/promises'
 import { validationResult } from 'express-validator'
-import { Property, Category, Price, Message } from './../models/index.js'
+import { Property, Category, Price, Message, Image } from './../models/index.js'
 import { isSeller } from '../helpers/index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -172,7 +172,16 @@ const uploadImage = async (req, res, next) => {
   }
   try {
     // Store the image and publish the property
-    property.image = req.file.filename
+    const images = req.files
+
+    images.forEach(async (image) => {
+      await Image.create({
+        propertyId: id,
+        url: image.filename
+      })
+    })
+
+    property.image = images[0].filename
     property.published = 1
     await property.save()
     next()
@@ -282,7 +291,9 @@ const remove = async (req, res) => {
   const { id } = req.params
 
   // Validate that the property exists
-  const property = await Property.findByPk(id)
+  const property = await Property.findByPk(id, {
+    include: [{ model: Image, as: 'images' }]
+  })
   if (!property) {
     return res.redirect('/properties')
   }
@@ -293,8 +304,15 @@ const remove = async (req, res) => {
     return res.redirect('/properties')
   }
 
-  // Delete associated image
-  await unlink(path.join(__dirname, `./../../public/uploads/${property.image}`))
+  // Delete associated images
+  property.images.forEach(async (image) => {
+    await unlink(path.join(__dirname, `./../../public/uploads/${image.url}`))
+  })
+
+  // Delete from the images table
+  await Image.destroy({
+    where: { propertyId: id }
+  })
 
   // Delete the property
   await property.destroy()
@@ -331,7 +349,8 @@ const showProperty = async (req, res) => {
   const property = await Property.findByPk(id, {
     include: [
       { model: Category, as: 'category' },
-      { model: Price, as: 'price' }
+      { model: Price, as: 'price' },
+      { model: Image, as: 'images' }
     ]
   })
   if (!property) {
@@ -343,10 +362,14 @@ const showProperty = async (req, res) => {
     return res.redirect('/404')
   }
 
+  // Get all images from the property
+  const images = property.images.map((image) => image.url)
+
   res.render('properties/show', {
     page: property.title,
     csrfToken: req.csrfToken(),
     property,
+    images,
     user: req.user,
     isSeller: isSeller(req.user?.id, property.userId)
   })

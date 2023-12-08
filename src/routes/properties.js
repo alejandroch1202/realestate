@@ -53,7 +53,7 @@ router.post(
   '/image/:id',
   protectRoutes,
   csrfValidatorHeader,
-  upload.single('image'),
+  upload.any('image'),
   uploadImage
 )
 

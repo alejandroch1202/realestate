@@ -1,6 +1,7 @@
 import Property from './Property.js'
 import Category from './Category.js'
 import Message from './Message.js'
+import Image from './Image.js'
 import Price from './Price.js'
 import User from './User.js'
 
@@ -16,10 +17,13 @@ Property.belongsTo(User)
 // A property has many messages
 Property.hasMany(Message)
 
+// A property has many images
+Property.hasMany(Image)
+
 // A message has one property related
 Message.belongsTo(Property)
 
 // A message has one user
 Message.belongsTo(User)
 
-export { Property, Category, Price, User, Message }
+export { Property, Category, Price, User, Message, Image }
