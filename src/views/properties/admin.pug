@@ -18,7 +18,7 @@ block content
             li
               div(class="p-6 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-8 md:space-y-0 gap-4")
                 div(class="sm:w-1/4 md:w-1/6")
-                  img(class="rounded-md w-full block" src=`uploads/${property.image}` alt=`Imagen propiedad ${property.title}`)
+                  img(class="rounded-md max-h-[200px] w-full block" src=`uploads/${property.image}` alt=`Imagen propiedad ${property.title}`)
 
                 div(class="sm:w-1/4 md:w-3/6 lg:w-4/6 space-y-3")
                   a(class="block text-2xl font-extrabold text-indigo-600 truncate" href=`/properties/${property.id}`)= property.title

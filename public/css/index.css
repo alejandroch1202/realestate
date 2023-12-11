@@ -597,6 +597,12 @@ video {
 .h-auto {
   height: auto;
 }
+.max-h-\[250px\] {
+  max-height: 250px;
+}
+.max-h-\[200px\] {
+  max-height: 200px;
+}
 .min-h-screen {
   min-height: 100vh;
 }

@@ -3,7 +3,7 @@ services:
   mysql:
     image: mysql:8
     environment:
-      MYSQL_DATABASE: 'realstate'
+      MYSQL_DATABASE: 'anchor_db'
       MYSQL_ROOT_PASSWORD: 'admin'
     ports:
       - '3306:3306'
